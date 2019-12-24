@@ -1,18 +1,12 @@
 import time
-from ctypes import windll, Structure, c_long, byref
+from winapi.cursor import get_cursor_pos, set_cursor_pos
 
-class POINT(Structure):
-    _fields_= [('x', c_long), ('y', c_long)]
+delay = 0.01
+points = []
+for i in range(200):
+    points.append(get_cursor_pos())
+    time.sleep(delay)
 
-def query_mouse_position():
-    pt = POINT()
-    windll.user32.GetCursorPos(byref(pt))
-    return {
-        'x': pt.x,
-        'y': pt.y
-    }
-
-for i in range(100):
-    pos = query_mouse_position()
-    print(pos)
-    time.sleep(0.1)
+for i in points:
+    set_cursor_pos(i[0], i[1])
+    time.sleep(delay)
